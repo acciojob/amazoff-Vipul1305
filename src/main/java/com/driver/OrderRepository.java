@@ -23,17 +23,14 @@ public class OrderRepository {
         partnerDB.put(partnerId,new DeliveryPartner(partnerId));
     }
     public void addOrderPartnerPair(String orderId, String partnerId){
-        if(assigOrderToPartnerDB.containsKey(partnerId)){
-            List<String> list= assigOrderToPartnerDB.get(partnerId);
-            list.add(orderId);
-            assigOrderToPartnerDB.put(partnerId,list);
-        }else {
-            List<String> list = new ArrayList<>();
-            list.add(orderId);
-            assigOrderToPartnerDB.put(partnerId,list);
+        List<String> list = new ArrayList<>();
+        if(assigOrderToPartnerDB.containsKey(partnerId)) {
+            list = assigOrderToPartnerDB.get(partnerId);
         }
+            list.add(orderId);
+            assigOrderToPartnerDB.put(partnerId,list);
         DeliveryPartner d = partnerDB.get(partnerId);
-        d.setNumberOfOrders(assigOrderToPartnerDB.get(partnerId).size());
+        d.setNumberOfOrders(list.size());
 
         // unassigned order
         unassignedOrderDB.remove(orderId);
@@ -57,6 +54,7 @@ public class OrderRepository {
             list.add(x);
         }
         return list;
+        //return new ArrayList<>(orderDB.keySet());
     }
     public int getCountOfUnassignedOrders(){
         return unassignedOrderDB.size();
@@ -81,19 +79,17 @@ public class OrderRepository {
             lastTime = Math.max(lastTime,time);
         }
         int hour = lastTime/60;
-        int minute = lastTime - (hour*60);
-        String ans = "";
-        if((hour/10)==0) {
-            ans += "0"+hour;
-        }else {
-            ans += hour;
+        int minute = lastTime%60;//lastTime - (hour*60);
+        String hourInString = String.valueOf(hour);
+        String minInString = String.valueOf(minute);
+        if(hourInString.length() == 1){
+            hourInString = "0" + hourInString;
         }
-        if ((minute/10)==0){
-            ans += "0"+minute;
-        }else {
-            ans += minute;
+        if(minInString.length() == 1){
+            minInString = "0" + minInString;
         }
-        return ans;
+
+        return  hourInString + ":" + minInString;
     }
     public void deletePartnerById(String partnerId){
         List<String> list = assigOrderToPartnerDB.get(partnerId);
@@ -109,7 +105,7 @@ public class OrderRepository {
                     //corresponding partner should be unassigned
                     list.remove(orderId);
                     assigOrderToPartnerDB.put(partnerID,list);
-                    //decrease no of order from DeliveryPartner
+                    //decrease no of order from DeliveryPaitrtner
                     DeliveryPartner d = partnerDB.get(partnerID);
                     d.setNumberOfOrders(d.getNumberOfOrders()-1);
                 }
