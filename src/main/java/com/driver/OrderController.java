@@ -110,7 +110,6 @@ public class OrderController {
         String time = null;
         time = service.getLastDeliveryTimeByPartnerId(partnerId);
         //Return the time when that partnerId will deliver his last delivery order.
-
         return new ResponseEntity<>(time, HttpStatus.CREATED);
     }
 
