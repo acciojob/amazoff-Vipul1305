@@ -37,15 +37,28 @@ public class OrderService {
         return repository.getCountOfUnassignedOrders();
     }
     public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId){
-        return repository.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);
+        Integer newtime = Integer.parseInt(time.substring(0,2))*60 + Integer.parseInt(time.substring(3,5));
+        return repository.getOrdersLeftAfterGivenTimeByPartnerId(newtime, partnerId);
     }
     public String getLastDeliveryTimeByPartnerId(String partnerId){
-        return repository.getLastDeliveryTimeByPartnerId(partnerId);
+        Integer time = repository.getLastDeliveryTimeByPartnerId(partnerId);
+        Integer hour = time/60;
+        Integer minute = time%60;//lastTime - (hour*60);
+        String hourInString = String.valueOf(hour);
+        String minInString = String.valueOf(minute);
+        if(hourInString.length() == 1){
+            hourInString = '0' + hourInString;
+        }
+        if(minInString.length() == 1){
+            minInString = '0' + minInString;
+        }
+
+        return  hourInString + ':' + minInString;
     }
     public void deletePartnerById(String partnerId){
-        repository.deletePartner(partnerId);
+        repository.deletePartnerById(partnerId);
     }
     public void deleteOrderById(String orderId){
-        repository.deleteOrder(orderId);
+        repository.deletePartnerById(orderId);
     }
 }
