@@ -1,64 +1,77 @@
 package com.driver;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class OrderService {
 
-    OrderRepository repository = new OrderRepository();
-
+    OrderRepository orderRepository=new OrderRepository();
     public void addOrder(Order order){
-        repository.addOrder(order);
+        orderRepository.addOrder(order);
     }
-    public void addPartner(String partnerId){
-        repository.addPartner(partnerId);
-    }
-    public void addOrderPartnerPair(String orderId, String partnerId){
-        repository.addOrderPartnerPair(orderId,partnerId);
-    }
-    public Order getOrderById(String orderId){
-        return repository.getOrderById(orderId);
-    }
-    public DeliveryPartner getPartnerById(String partnerId){
-        return repository.getPartnerById(partnerId);
-    }
-    public Integer getOrderCountByPartnerId(String partnerId){
-        return repository.getOrderCountByPartnerId(partnerId);
-    }
-    public List<String> getOrdersByPartnerId(String partnerId){
-        return  repository.getOrdersByPartnerId(partnerId);
-    }
-    public List<String> getAllOrders(){
-        return repository.getAllOrders();
-    }
-    public Integer getCountOfUnassignedOrders(){
-        return repository.getCountOfUnassignedOrders();
-    }
-    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId){
-        Integer newtime = Integer.parseInt(time.substring(0,2))*60 + Integer.parseInt(time.substring(3,5));
-        return repository.getOrdersLeftAfterGivenTimeByPartnerId(newtime, partnerId);
-    }
-    public String getLastDeliveryTimeByPartnerId(String partnerId){
-        Integer time = repository.getLastDeliveryTimeByPartnerId(partnerId);
-        Integer hour = time/60;
-        Integer minute = time%60;//lastTime - (hour*60);
-        String hourInString = String.valueOf(hour);
-        String minInString = String.valueOf(minute);
-        if(hourInString.length() == 1){
-            hourInString = '0' + hourInString;
-        }
-        if(minInString.length() == 1){
-            minInString = '0' + minInString;
-        }
 
-        return  hourInString + ':' + minInString;
+    public void addPartnerId(String partnerId){
+        orderRepository.addPartnerId(partnerId);
     }
+
+    public void addOrderPartnerPair(String orderId,String partnerId){
+        orderRepository.addOrderPartnerPair(orderId,partnerId);
+    }
+
+    public Order getOrderById(String orderId){
+        return orderRepository.getOrderById(orderId);
+    }
+
+    public DeliveryPartner getPartnerById(String partnerId){
+        return orderRepository.getPartnerById(partnerId);
+    }
+
+    public int  getOrderCountByPartnerId(String partnerId){
+        int ans=orderRepository. getOrderCountByPartnerId(partnerId);
+        return ans;
+    }
+
+
+    public List<String> getOrdersByPartnerId(String partnerId){
+        List<String> orders=orderRepository.getOrdersByPartnerId(partnerId);
+        return orders;
+    }
+
+
+    public List<String> getAllOrders(){
+        List<String> ans=orderRepository.getAllOrders();
+        return  ans;
+    }
+
+    public int getCountOfUnassignedOrders(){
+        return orderRepository.getCountOfUnassignedOrders();
+    }
+
+    public int getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId){
+        String [] arr=time.split(":");
+        int hour=Integer.parseInt(arr[0]);
+        int minute=Integer.parseInt(arr[1]);
+
+        hour=hour*60;
+        return  orderRepository.getOrdersLeftAfterGivenTimeByPartnerId(hour+minute,partnerId);
+
+    }
+
+    public String  getLastDeliveryTimeByPartnerId(String partnerId){
+        return  orderRepository.getLastDeliveryTimeByPartnerId(partnerId);
+    }
+
+
+
     public void deletePartnerById(String partnerId){
-        repository.deletePartnerById(partnerId);
+        orderRepository.deletePartnerById(partnerId);
     }
+
+
+
     public void deleteOrderById(String orderId){
-        repository.deletePartnerById(orderId);
+        orderRepository.deleteOrderById(orderId);
     }
 }
